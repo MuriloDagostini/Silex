@@ -1,13 +1,10 @@
 {
-    "config" : {
-        "bin-dir" : "bin/"
-    },
-    "autoload" : {
-        "psr-0" : {
-            "Formulario" : "src/"
-        }
-    },
     "require" : {
         "silex/silex" : "1.*.*"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "App\\" : "src/App/"
+        }
     }
 }
