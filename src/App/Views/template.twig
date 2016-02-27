@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-language" content="pt_BR" />
+    <meta name="language" content="pt-br" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block css %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/site.css" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    {% endblock %}
+    <title>Projeto Silex</title>
+</head>
+<body>
+
+{% block topo %}
+    <div class="container-fluid topo">
+        <h3>Projeto Silex - {{ titulo_pagina }}</h3>
+    </div>
+{% endblock %}
+
+<div class="conteudo">
+    {% block conteudo %}{% endblock %}
+</div>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

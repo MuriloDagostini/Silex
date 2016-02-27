@@ -65,4 +65,13 @@ class ProdutoService
         return $result;
 
     }
+
+    public function getProduto($id_produto){
+
+        $mapper = $this->produtoMapper;
+        $result = $mapper->getProduto($id_produto);
+
+        return $result;
+
+    }
 }

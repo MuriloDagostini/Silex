@@ -22,56 +22,86 @@ $app['fixtureService'] = function(){
     return $fixture;
 };
 
-$app->get('/',function(){
-    return "Início";
-});
+$app->get('/',function() use ($app){
+
+    $dados = $app['produtoService']->getProdutos();
+
+    $vars = [
+        'produtos' => $dados
+    ];
+
+    return $app['twig']->render('index.twig',$vars);
+
+})->bind('produto_list');
 
 $app->get('/fixture',function() use ($app){
     $app['fixtureService']->CreateDB();
     return "";
 });
 
-$app->get('/produto/insert',function() use ($app){
+$app->get('/produto/add',function() use ($app){
 
-    $dados['nome'] = "ASUS ZENBOOK UX31A";
-    $dados['descricao'] = "Uma breve descrição sobre o produto";
-    $dados['valor'] = "1799.00";
+    $vars = [
 
-    $result = $app['produtoService']->insert($dados);
+    ];
 
-    return $app->json($result);
+    return $app['twig']->render('/produto/add.twig',$vars);
 
-});
+})->bind('produto_add');
 
-$app->get('/produto/update',function() use ($app){
+$app->post('/produto/insert',function() use ($app){
 
-    $dados['id'] = "2";
-    $dados['nome'] = "ASUS ZENBOOK UX31A";
-    $dados['descricao'] = "Uma breve descrição sobre o produto";
-    $dados['valor'] = "1999.00";
+    $dados['nome'] = $_POST['nome'];
+    $dados['descricao'] = $_POST['descricao'];
+    $dados['valor'] = $_POST['valor'];
 
-    $result = $app['produtoService']->update($dados);
+    $app['produtoService']->insert($dados);
 
-    return $app->json($result);
+    echo "<script>alert('Produto inserido');window.location.href = '/';</script>";
 
-});
+    return '';
+
+})->bind('produto_insert');
+
+$app->get('/produto/alter',function() use ($app){
+
+    $id_produto = $_GET['id_produto'];
+
+    $dados = $app['produtoService']->getProduto($id_produto);
+
+    $vars = [
+        'dados' => $dados
+    ];
+
+    return $app['twig']->render('/produto/add.twig',$vars);
+
+})->bind('produto_alter');
+
+$app->post('/produto/update',function() use ($app){
+
+    $dados['id'] = $_POST['id_produto'];
+    $dados['nome'] = $_POST['nome'];
+    $dados['descricao'] = $_POST['descricao'];
+    $dados['valor'] = $_POST['valor'];
+
+    $app['produtoService']->update($dados);
+
+    echo "<script>alert('Produto atualizado');window.location.href = '/';</script>";
+
+    return '';
+
+})->bind('produto_update');
 
 $app->get('/produto/delete',function() use ($app){
 
-    $dados['id'] = "2";
+    $dados['id'] = $_GET['id_produto'];
 
-    $result = $app['produtoService']->delete($dados);
+    $app['produtoService']->delete($dados);
 
-    return $app->json($result);
+    echo "<script>alert('Produto excluído');window.location.href = '/';</script>";
 
-});
+    return '';
 
-$app->get('/produto/list',function() use ($app){
-
-    $result = $app['produtoService']->getProdutos();
-
-    return $app->json($result);
-
-});
+})->bind('produto_delete');
 
 $app->run();

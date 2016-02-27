@@ -56,4 +56,17 @@ class ProdutoMapper
 
     }
 
+    public function getProduto($id_produto){
+
+        $DB = new ConexaoDB();
+
+        $sql = "SELECT * FROM produto where id_produto = :id_produto ";
+        $stmt = $DB->conexao->prepare($sql);
+        $stmt->bindValue("id_produto",$id_produto);
+        $stmt->execute();
+
+        return $stmt->fetch();
+
+    }
+
 }
