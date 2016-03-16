@@ -31,7 +31,9 @@ class ProdutoMapper
         $stmt->bindValue("descricao",$produto->getDescricao());
         $stmt->bindValue("valor",$produto->getValor());
 
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 
     public function delete(Produto $produto){
@@ -41,7 +43,9 @@ class ProdutoMapper
         $stmt = $DB->conexao->prepare($sql);
         $stmt->bindValue("id_produto",$produto->getId());
 
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 
     public function getProdutos(){

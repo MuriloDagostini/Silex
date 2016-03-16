@@ -6,6 +6,7 @@ use App\Entity\Produto;
 use App\Mapper\ProdutoMapper;
 use App\DB\ConexaoDB;
 use App\DB\Fixture;
+use Symfony\Component\HttpFoundation\Request;
 
 $app['produtoService'] = function(){
     $produto = new Produto();
@@ -103,5 +104,108 @@ $app->get('/produto/delete',function() use ($app){
     return '';
 
 })->bind('produto_delete');
+
+/**
+ *  API PUBLICA
+ */
+
+//LISTAR PRODUTOS
+$app->get('/api/produtos',function() use ($app){
+
+    $dados = $app['produtoService']->getProdutos();
+
+    if($dados){
+        return $app->json($dados);
+    }else{
+        return $app->json('Nenhum produto cadastrado');
+    }
+
+});
+
+//LISTAR UM PRODUTO
+$app->get('/api/produto/{id}',function($id) use ($app){
+
+    if(!filter_var($id,FILTER_VALIDATE_INT) === false){
+
+        $dados = $app['produtoService']->getProduto($id);
+
+        if($dados){
+            return $app->json($dados);
+        }else{
+            return $app->json('Produto não encontrado');
+        }
+
+    }else{
+        return $app->json('Input inválido',500);
+    }
+
+});
+
+$app->post('/api/produto/insert',function(Request $request) use ($app){
+
+    $dados['nome'] = filter_var($request->get('nome'),FILTER_SANITIZE_STRING);
+    $dados['descricao'] = filter_var($request->get('descricao'),FILTER_SANITIZE_STRING);
+    $dados['valor'] = filter_var($request->get('valor'),FILTER_SANITIZE_NUMBER_FLOAT);
+
+    if(!$dados['nome']){
+        return $app->json('nome inválido',500);
+    }
+    if(!$dados['descricao']){
+        return $app->json('decrição inválida',500);
+    }
+    if(!$dados['valor']){
+        return $app->json('valor inválido',500);
+    }
+
+    $app['produtoService']->insert($dados);
+
+    return $app->json('Produto inserido com sucesso');
+
+});
+
+$app->put('/api/produto/update',function(Request $request) use ($app){
+
+    $dados['id'] = filter_var($request->get('id_produto'),FILTER_VALIDATE_INT);
+    $dados['nome'] = filter_var($request->get('nome'),FILTER_SANITIZE_STRING);
+    $dados['descricao'] = filter_var($request->get('descricao'),FILTER_SANITIZE_STRING);
+    $dados['valor'] = filter_var($request->get('valor'),FILTER_SANITIZE_NUMBER_FLOAT);
+
+    if(!$dados['id']){
+        return $app->json('id_produto inválido',500);
+    }
+    if(!$dados['nome']){
+        return $app->json('nome inválido',500);
+    }
+    if(!$dados['descricao']){
+        return $app->json('decrição inválida',500);
+    }
+    if(!$dados['valor']){
+        return $app->json('valor inválido',500);
+    }
+
+    if($app['produtoService']->update($dados)){
+        return $app->json('Produto alterado com sucesso');
+    }else{
+        return $app->json('Produto não encontrado');
+    }
+
+});
+
+$app->delete('/api/produto/delete',function(Request $request) use ($app){
+
+    $dados['id'] = filter_var($request->get('id_produto'),FILTER_VALIDATE_INT);
+
+    if(!$dados['id']){
+        return $app->json('id_produto inválido',500);
+    }
+
+    if($app['produtoService']->delete($dados)){
+        return $app->json('Produto excluído com sucesso');
+    }else{
+        return $app->json('Produto não encontrado');
+    }
+
+
+});
 
 $app->run();
