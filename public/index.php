@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 $app['produtoService'] = function(){
     $produto = new Produto();
-    $produtoMapper = new ProdutoMapper();
+    $conexao = new ConexaoDB();
+    $produtoMapper = new ProdutoMapper($conexao);
     $produtoService = new ProdutoService($produto,$produtoMapper);
 
     return $produtoService;

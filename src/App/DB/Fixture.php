@@ -6,7 +6,7 @@ class Fixture
 {
     private $DB;
 
-    function __construct($DB)
+    function __construct(ConexaoDB $DB)
     {
         $this->DB = $DB;
     }
